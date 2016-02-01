@@ -1,16 +1,16 @@
 Resum del projecte:
 ===================
 
-* Nom:
-* Adreça de correu:
+* Nom: Josep Alòs Pascual
+* Adreça de correu: jap8@alumnes.udl.cat
 
-* Nom:
-* Adreça de correu:
+* Nom: Bianca Madalina Padurean
+* Adreça de correu: bp6@alumnes.udl.cat
 
 Categoria:
 ----------
 
-[ ] Primer, segon i tercer
+[x] Primer, segon i tercer
 [ ] Quart i màster
 
 (marqueu amb una [x] el que correspongui)
