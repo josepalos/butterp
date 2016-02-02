@@ -64,7 +64,7 @@ public class NestedMap implements Environment {
 
     @Override
     public void bind(Symbol symbol, SExpression value) {
-        throw new UnsupportedOperationException("not implemented yet");
+        map.put(symbol, value);
     }
 
 }
