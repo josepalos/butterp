@@ -58,7 +58,8 @@ public class NestedMap implements Environment {
 
     @Override
     public Environment extend() {
-        throw new UnsupportedOperationException("not implemented yet");
+	Environment env = new NestedMap(this);
+	return env;
     }
 
     @Override
