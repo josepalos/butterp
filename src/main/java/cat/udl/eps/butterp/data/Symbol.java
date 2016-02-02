@@ -10,7 +10,7 @@ public class Symbol implements SExpression {
     public final String name; // Si el definiu privat caldrà un getter
 
     public Symbol(String name) {
-        throw new UnsupportedOperationException("not implemented yet");
+        this.name = name;
     }
 
     @Override
@@ -20,16 +20,21 @@ public class Symbol implements SExpression {
 
     @Override
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return (
+		o instanceof Symbol &&
+		((Symbol)o).name.equals(this.name)
+	    );
     }
 
     @Override
     public int hashCode() {
-        throw new UnsupportedOperationException("not implemented yet");
+        int hash = 1;
+	hash = hash*17 + this.name.hashCode();
+	return hash;
     }
 
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("not implemented yet");
+        return "Symbol[name="+name+']';
     }
 }
