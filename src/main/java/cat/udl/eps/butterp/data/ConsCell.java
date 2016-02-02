@@ -8,7 +8,8 @@ public class ConsCell implements SExpression {
     public final SExpression cdr; // Si el definiu privat caldrà un getter
 
     public ConsCell(SExpression car, SExpression cdr) {
-        throw new UnsupportedOperationException("not implemented yet");
+        this.car = car;
+	this.cdr = cdr;
     }
 
     @Override
@@ -18,16 +19,23 @@ public class ConsCell implements SExpression {
 
     @Override
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return (
+		o instanceof ConsCell &&
+		((ConsCell)o).car.equals(this.car) &&
+		((ConsCell)o).cdr.equals(this.cdr)
+	    );
     }
 
     @Override
     public int hashCode() {
-        throw new UnsupportedOperationException("not implemented yet");
+        int hash = 1;
+	hash = hash * 13 + car.hashCode();
+	hash = hash * 31 + cdr.hashCode();
+	return hash;
     }
 
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("not implemented yet");
+        return "ConsCell[car="+car.toString()+", cdr="+cdr.toString()+']';
     }
 }
