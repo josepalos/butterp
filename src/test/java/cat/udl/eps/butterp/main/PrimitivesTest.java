@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main;
+package cat.udl.eps.butterp.main;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -13,7 +13,7 @@ import org.junit.runners.Suite;
  * @author Usuari
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({main.AddPrimitiveTest.class})
+@Suite.SuiteClasses({cat.udl.eps.butterp.main.AddPrimitiveTest.class})
 public class PrimitivesTest {
     
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main;
+package cat.udl.eps.butterp.main;
 
 import cat.udl.eps.butterp.data.ConsCell;
 import cat.udl.eps.butterp.data.EvaluationError;
