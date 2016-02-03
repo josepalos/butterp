@@ -37,7 +37,9 @@ public class ListOps {
     }
 
     public static int length(SExpression sexpr) {
-        throw new UnsupportedOperationException("not implemented yet");
+        if (sexpr.equals(Symbol.NIL)) return 0;
+        ConsCell c = (ConsCell) sexpr;
+        return 1 + length(c.cdr);
     }
 
     public static SExpression nth(SExpression sexpr, int n) {
