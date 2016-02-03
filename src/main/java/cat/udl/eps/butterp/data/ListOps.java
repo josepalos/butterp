@@ -1,5 +1,6 @@
 package cat.udl.eps.butterp.data;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ListOps {
@@ -17,11 +18,22 @@ public class ListOps {
     }
 
     public static SExpression list(SExpression... elems) {
-        throw new UnsupportedOperationException("not implemented yet");
+	return list(Arrays.asList(elems));
     }
 
     public static SExpression list(List<SExpression> elems) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return listRec(elems, 0);
+    }
+    
+    private static SExpression listRec(List<SExpression> elems, int offset){
+	if(elems.size() == offset){
+	    return Symbol.NIL;
+	}else{
+	    return new ConsCell(
+		    elems.get(offset),
+		    listRec(elems, offset+1)
+		);
+	}
     }
 
     public static int length(SExpression sexpr) {
@@ -37,3 +49,13 @@ public class ListOps {
     }
 
 }
+
+
+
+
+
+/*
+[consCell ( 1r elem, ConsCell (2n elem, ConsCell (3r element)))]
+
+
+*/
