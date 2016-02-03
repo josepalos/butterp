@@ -1,6 +1,10 @@
 package cat.udl.eps.butterp.main;
 
+import cat.udl.eps.butterp.data.ConsCell;
+import cat.udl.eps.butterp.data.Function;
+import cat.udl.eps.butterp.data.SExpression;
 import cat.udl.eps.butterp.data.Symbol;
+import cat.udl.eps.butterp.data.Integer;
 import cat.udl.eps.butterp.environment.Environment;
 
 public class Primitives {
@@ -34,6 +38,18 @@ public class Primitives {
         });
 
         */
+	
+	Function add = new Function() {
+	    @Override
+	    public SExpression apply(SExpression evargs, Environment env) {
+		if(evargs.equals(Symbol.NIL)) return new Integer(0);
+		
+		ConsCell argsCC = (ConsCell) evargs;
+		Integer i = (Integer) argsCC.car.eval(env);
+		Integer rec = (Integer) this.apply(argsCC.cdr, env);
+		return new Integer(i.value + rec.value);
+	    }
+	};
 
     }
 }
