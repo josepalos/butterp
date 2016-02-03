@@ -42,12 +42,26 @@ public class Primitives {
 	Function add = new Function() {
 	    @Override
 	    public SExpression apply(SExpression evargs, Environment env) {
+		//TODO: check errors in casts --> try catch throw EvaluationError
 		if(evargs.equals(Symbol.NIL)) return new Integer(0);
 		
 		ConsCell argsCC = (ConsCell) evargs;
 		Integer i = (Integer) argsCC.car.eval(env);
 		Integer rec = (Integer) this.apply(argsCC.cdr, env);
 		return new Integer(i.value + rec.value);
+	    }
+	};
+	
+	Function mult = new Function() {
+	    @Override
+	    public SExpression apply(SExpression evargs, Environment env) {
+		//TODO: check errors in casts --> try catch throw EvaluationError
+		if(evargs.equals(Symbol.NIL)) return new Integer(1);
+		
+		ConsCell argsCC = (ConsCell) evargs;
+		Integer i = (Integer) argsCC.car.eval(env);
+		Integer rec = (Integer) this.apply(argsCC.cdr, env);
+		return new Integer(i.value * rec.value);
 	    }
 	};
 
