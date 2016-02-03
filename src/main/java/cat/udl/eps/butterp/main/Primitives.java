@@ -65,5 +65,9 @@ public class Primitives {
 	    }
 	};
 
+	
+	
+	env.bindGlobal(new Symbol("add"), add);
+	env.bindGlobal(new Symbol("mult"), mult);
     }
 }
