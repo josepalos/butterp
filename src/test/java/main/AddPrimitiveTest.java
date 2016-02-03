@@ -15,6 +15,7 @@ import cat.udl.eps.butterp.data.Integer;
 import cat.udl.eps.butterp.data.SExpression;
 import cat.udl.eps.butterp.environment.NestedMap;
 import static org.junit.Assert.assertEquals;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -24,6 +25,7 @@ import org.junit.Test;
  */
 public class AddPrimitiveTest {
     private static Environment env;
+    private Function add;
     
     @BeforeClass
     public static void bindPrimitives(){
@@ -31,16 +33,18 @@ public class AddPrimitiveTest {
 	Primitives.loadPrimitives(env);
     }
     
+    @Before
+    public void setupAddFunction(){
+	add = (Function) env.find(new Symbol("add"));
+    }
+    
     @Test
     public void add_with_no_args_return_0(){
-	Function add = (Function) env.find(new Symbol("add"));
 	assertEquals(new Integer(0), add.apply(Symbol.NIL, env));
     }
     
     @Test
     public void add_with_args_1_2_3_return_6(){
-	Function add = (Function) env.find(new Symbol("add"));
-	
 	//TODO -- change args initialization to ListOps.list(...)
 	SExpression args = new ConsCell(
 				    new Integer(1),
@@ -58,8 +62,6 @@ public class AddPrimitiveTest {
     
     @Test (expected = EvaluationError.class)
     public void add_with_arguments_no_integers_throws_EvaluationError(){
-	Function add = (Function) env.find(new Symbol("add"));
-	
 	SExpression args = add;
 	add.apply(args, env);
     }
