@@ -7,7 +7,7 @@ public class Integer implements SExpression {
     public final int value; // Si el definiu privat caldrà un getter
 
     public Integer(int value) {
-        throw new UnsupportedOperationException("not implemented yet");
+        this.value = value;
     }
 
     @Override
@@ -17,16 +17,19 @@ public class Integer implements SExpression {
 
     @Override
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return (
+		o instanceof Integer &&
+		((Integer)o).value == this.value
+	    );
     }
 
     @Override
     public int hashCode() {
-        throw new UnsupportedOperationException("not implemented yet");
+        return value;
     }
 
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("not implemented yet");
+        return "Integer[value="+value+']';
     }
 }
