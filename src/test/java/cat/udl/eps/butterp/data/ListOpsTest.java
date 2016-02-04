@@ -24,10 +24,21 @@ public class ListOpsTest {
        ConsCell expected = new ConsCell(Symbol.NIL, Symbol.NIL);
        assertEquals(expected, list(s));
     }
-    
     @Test
     public void test_list_varargs_one_arg(){
+        SExpression expected = new ConsCell(new Integer(0),  Symbol.NIL);
+        assertEquals(expected, list(new Integer(0)));
+    }
+    
+    @Test
+    public void test_list_varargs_with_more_arg(){
         SExpression expected = new ConsCell(new Integer(0), new ConsCell(new Integer(1), Symbol.NIL));
         assertEquals(expected, list(new Integer(0), new Integer(1)));
+    }
+    @Test
+    public void test_list_varargs_with_list(){
+        SExpression s= new ConsCell(new Integer(0), new ConsCell(new Integer(1), Symbol.NIL));
+        SExpression expected = new ConsCell(s, Symbol.NIL);
+        assertEquals(expected, list(s));
     }
 }
