@@ -77,7 +77,7 @@ public class Primitives {
 	Special define = new Special() {
 	    @Override
 	    public SExpression applySpecial(SExpression args, Environment env) {
-		if( ListOps.length((ConsCell)args) != 2){
+		if( !(args instanceof ConsCell) || ListOps.length((ConsCell)args) != 2){
 		    throw new EvaluationError("DEFINE should have two arguments");
 		}
 		ConsCell c = (ConsCell) args;
