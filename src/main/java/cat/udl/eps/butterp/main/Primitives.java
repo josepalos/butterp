@@ -6,6 +6,8 @@ import cat.udl.eps.butterp.data.Function;
 import cat.udl.eps.butterp.data.SExpression;
 import cat.udl.eps.butterp.data.Symbol;
 import cat.udl.eps.butterp.data.Integer;
+import cat.udl.eps.butterp.data.ListOps;
+import cat.udl.eps.butterp.data.Special;
 import cat.udl.eps.butterp.environment.Environment;
 
 public class Primitives {
@@ -44,7 +46,6 @@ public class Primitives {
 	    @Override
 	    public SExpression apply(SExpression evargs, Environment env) {
 		try{
-		    //TODO: check errors in casts --> try catch throw EvaluationError
 		    if(evargs.equals(Symbol.NIL)) return new Integer(0);
 
 		    ConsCell argsCC = (ConsCell) evargs;
@@ -61,7 +62,6 @@ public class Primitives {
 	    @Override
 	    public SExpression apply(SExpression evargs, Environment env) {
 		try{
-		    //TODO: check errors in casts --> try catch throw EvaluationError
 		    if(evargs.equals(Symbol.NIL)) return new Integer(1);
 
 		    ConsCell argsCC = (ConsCell) evargs;
@@ -73,10 +73,34 @@ public class Primitives {
 		}
 	    }
 	};
+	
+	Special define = new Special() {
+	    @Override
+	    public SExpression applySpecial(SExpression args, Environment env) {
+		if( ListOps.length((ConsCell)args) != 2){
+		    throw new EvaluationError("DEFINE should have two arguments");
+		}
+		ConsCell c = (ConsCell) args;
+		Symbol alias;
+		
+		try{
+		    alias = (Symbol) c.car;
+		}catch(ClassCastException e){
+		    throw new EvaluationError("DEFINE's first argument should be a symbol");
+		}
+		
+	        SExpression val = c.cdr.eval(env);
+		
+		env.bindGlobal(alias, val);
+		
+		return Symbol.NIL;
+	    }
+	};
 
 	
 	
 	env.bindGlobal(new Symbol("add"), add);
 	env.bindGlobal(new Symbol("mult"), mult);
+	env.bindGlobal(new Symbol("define"), define);
     }
 }
