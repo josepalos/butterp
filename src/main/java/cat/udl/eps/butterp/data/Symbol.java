@@ -15,7 +15,7 @@ public class Symbol implements SExpression {
 
     @Override
     public SExpression eval(Environment env) {
-        throw new UnsupportedOperationException("not implemented yet");
+	return env.find(this).eval(env);
     }
 
     @Override
@@ -35,6 +35,6 @@ public class Symbol implements SExpression {
 
     @Override
     public String toString() {
-        return "Symbol[name="+name+']';
+        return name;
     }
 }

@@ -14,7 +14,15 @@ public class ConsCell implements SExpression {
 
     @Override
     public SExpression eval(Environment env) {
-        throw new UnsupportedOperationException("not implemented yet");
+	if( car instanceof Function ){
+	    Function f = (Function) car;
+	    return f.apply(cdr, env);
+	}else if( car instanceof Special){
+	    Special s = (Special) car;
+	    return s.applySpecial(cdr, env);
+	}else{
+	    return car.eval(env);
+	}
     }
 
     @Override
@@ -36,6 +44,17 @@ public class ConsCell implements SExpression {
 
     @Override
     public String toString() {
-        return "ConsCell[car="+car.toString()+", cdr="+cdr.toString()+']';
+	StringBuilder strb = new StringBuilder().append('(');
+	elementsToString(strb);
+	strb.append(')');
+        return strb.toString();
+    }
+    
+    private void elementsToString(StringBuilder strb){
+	strb.append(car.toString());
+	if( cdr instanceof ConsCell ){
+	    strb.append(", ");
+	    ((ConsCell)cdr).elementsToString(strb);
+	}
     }
 }
