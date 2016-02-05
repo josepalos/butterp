@@ -30,6 +30,6 @@ public class Integer implements SExpression {
 
     @Override
     public String toString() {
-        return "Integer[value="+value+']';
+        return java.lang.Integer.toString(value);
     }
 }
