@@ -14,14 +14,15 @@ public class ConsCell implements SExpression {
 
     @Override
     public SExpression eval(Environment env) {
-	if( car instanceof Function ){
-	    Function f = (Function) car;
+	SExpression first = car.eval(env);
+	if( first instanceof Function ){
+	    Function f = (Function) first;
 	    return f.apply(cdr, env);
-	}else if( car instanceof Special){
-	    Special s = (Special) car;
+	}else if( first instanceof Special){
+	    Special s = (Special) first;
 	    return s.applySpecial(cdr, env);
 	}else{
-	    return car.eval(env);
+	    return first.eval(env);
 	}
     }
 
