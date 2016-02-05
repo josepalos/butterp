@@ -35,6 +35,6 @@ public class Symbol implements SExpression {
 
     @Override
     public String toString() {
-        return "Symbol[name="+name+']';
+        return name;
     }
 }
