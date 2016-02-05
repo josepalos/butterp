@@ -1,6 +1,11 @@
 package cat.udl.eps.butterp.main;
 
+import cat.udl.eps.butterp.data.ConsCell;
+import cat.udl.eps.butterp.data.EvaluationError;
+import cat.udl.eps.butterp.data.Function;
+import cat.udl.eps.butterp.data.SExpression;
 import cat.udl.eps.butterp.data.Symbol;
+import cat.udl.eps.butterp.data.Integer;
 import cat.udl.eps.butterp.environment.Environment;
 
 public class Primitives {
@@ -34,6 +39,44 @@ public class Primitives {
         });
 
         */
+	
+	Function add = new Function() {
+	    @Override
+	    public SExpression apply(SExpression evargs, Environment env) {
+		try{
+		    //TODO: check errors in casts --> try catch throw EvaluationError
+		    if(evargs.equals(Symbol.NIL)) return new Integer(0);
 
+		    ConsCell argsCC = (ConsCell) evargs;
+		    Integer i = (Integer) argsCC.car.eval(env);
+		    Integer rec = (Integer) this.apply(argsCC.cdr, env);
+		    return new Integer(i.value + rec.value);
+		}catch(ClassCastException e){
+		    throw new EvaluationError("ADD should get only integer arguments");
+		}
+	    }
+	};
+	
+	Function mult = new Function() {
+	    @Override
+	    public SExpression apply(SExpression evargs, Environment env) {
+		try{
+		    //TODO: check errors in casts --> try catch throw EvaluationError
+		    if(evargs.equals(Symbol.NIL)) return new Integer(1);
+
+		    ConsCell argsCC = (ConsCell) evargs;
+		    Integer i = (Integer) argsCC.car.eval(env);
+		    Integer rec = (Integer) this.apply(argsCC.cdr, env);
+		    return new Integer(i.value * rec.value);
+		}catch(ClassCastException e){
+		    throw new EvaluationError("MULT should get only integer arguments");
+		}
+	    }
+	};
+
+	
+	
+	env.bindGlobal(new Symbol("add"), add);
+	env.bindGlobal(new Symbol("mult"), mult);
     }
 }
