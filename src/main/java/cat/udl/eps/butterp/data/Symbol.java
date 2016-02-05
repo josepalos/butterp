@@ -15,7 +15,7 @@ public class Symbol implements SExpression {
 
     @Override
     public SExpression eval(Environment env) {
-	return env.find(this).eval(env);
+	return env.find(this);
     }
 
     @Override
