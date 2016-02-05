@@ -44,6 +44,17 @@ public class ConsCell implements SExpression {
 
     @Override
     public String toString() {
-        return "ConsCell[car="+car.toString()+", cdr="+cdr.toString()+']';
+	StringBuilder strb = new StringBuilder().append('(');
+	elementsToString(strb);
+	strb.append(')');
+        return strb.toString();
+    }
+    
+    private void elementsToString(StringBuilder strb){
+	strb.append(car.toString());
+	if( cdr instanceof ConsCell ){
+	    strb.append(", ");
+	    ((ConsCell)cdr).elementsToString(strb);
+	}
     }
 }
