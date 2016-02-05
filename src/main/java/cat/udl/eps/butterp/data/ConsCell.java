@@ -17,6 +17,9 @@ public class ConsCell implements SExpression {
 	if( car instanceof Function ){
 	    Function f = (Function) car;
 	    return f.apply(cdr, env);
+	}else if( car instanceof Special){
+	    Special s = (Special) car;
+	    return s.applySpecial(cdr, env);
 	}else{
 	    return car.eval(env);
 	}
