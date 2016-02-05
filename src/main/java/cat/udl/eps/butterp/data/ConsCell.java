@@ -14,7 +14,12 @@ public class ConsCell implements SExpression {
 
     @Override
     public SExpression eval(Environment env) {
-        throw new UnsupportedOperationException("not implemented yet");
+	if( car instanceof Function ){
+	    Function f = (Function) car;
+	    return f.apply(cdr, env);
+	}else{
+	    return car.eval(env);
+	}
     }
 
     @Override
