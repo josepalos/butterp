@@ -1,8 +1,10 @@
 package cat.udl.eps.butterp.data;
 
 import cat.udl.eps.butterp.environment.Environment;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class ConsCell implements SExpression {
+public class ConsCell implements SExpression, Iterable<SExpression>{
 
     public final SExpression car; // Si el definiu privat caldrà un getter
     public final SExpression cdr; // Si el definiu privat caldrà un getter
@@ -56,6 +58,33 @@ public class ConsCell implements SExpression {
 	if( cdr instanceof ConsCell ){
 	    strb.append(", ");
 	    ((ConsCell)cdr).elementsToString(strb);
+	}
+    }
+
+    @Override
+    public Iterator<SExpression> iterator() {
+	return new ConsCellIterator(this);
+    }
+    
+    private class ConsCellIterator implements Iterator<SExpression>{
+	private SExpression current;
+
+	public ConsCellIterator(ConsCell c) {
+	    current = c;
+	}
+	
+	@Override
+	public boolean hasNext() {
+	    return !current.equals(Symbol.NIL);
+	}
+
+	@Override
+	public SExpression next() {
+	    if(!hasNext()) throw new NoSuchElementException();
+	    
+	    SExpression next = ListOps.car(current);
+	    current = ListOps.cdr(current);
+	    return next;
 	}
     }
 }
