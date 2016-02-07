@@ -13,94 +13,111 @@ import cat.udl.eps.butterp.environment.Environment;
 public class Primitives {
 
     public static void loadPrimitives(Environment env) {
-        env.bindGlobal(Symbol.NIL, Symbol.NIL);
-        env.bindGlobal(Symbol.TRUE, Symbol.TRUE);
+	env.bindGlobal(Symbol.NIL, Symbol.NIL);
+	env.bindGlobal(Symbol.TRUE, Symbol.TRUE);
 
-        /*
-
-        An example of a predefined Function:
-
-        env.bindGlobal(new Symbol("function"), new Function() {
-            @Override
-            public SExpression apply(SExpression evargs, Environment env) {
-                throw new UnsupportedOperationException("not implemented yet");
-            }
-        });
-
-        */
-
-        /*
-
-        An example of a predefined Special:
-
-        env.bindGlobal(new Symbol("special"), new Special() {
-            @Override
-            public SExpression applySpecial(SExpression args, Environment env) {
-                throw new UnsupportedOperationException("not implemented yet");
-            }
-        });
-
-        */
-	
 	Function add = new Function() {
 	    @Override
 	    public SExpression apply(SExpression evargs, Environment env) {
-		try{
-		    if(evargs.equals(Symbol.NIL)) return new Integer(0);
+		try {
+		    if (evargs.equals(Symbol.NIL)) {
+			return new Integer(0);
+		    }
 
 		    ConsCell argsCC = (ConsCell) evargs;
 		    Integer i = (Integer) argsCC.car.eval(env);
 		    Integer rec = (Integer) this.apply(argsCC.cdr, env);
 		    return new Integer(i.value + rec.value);
-		}catch(ClassCastException e){
+		} catch (ClassCastException e) {
 		    throw new EvaluationError("ADD should get only integer arguments");
 		}
 	    }
 	};
-	
+
 	Function mult = new Function() {
 	    @Override
 	    public SExpression apply(SExpression evargs, Environment env) {
-		try{
-		    if(evargs.equals(Symbol.NIL)) return new Integer(1);
+		try {
+		    if (evargs.equals(Symbol.NIL)) {
+			return new Integer(1);
+		    }
 
 		    ConsCell argsCC = (ConsCell) evargs;
 		    Integer i = (Integer) argsCC.car.eval(env);
 		    Integer rec = (Integer) this.apply(argsCC.cdr, env);
 		    return new Integer(i.value * rec.value);
-		}catch(ClassCastException e){
+		} catch (ClassCastException e) {
 		    throw new EvaluationError("MULT should get only integer arguments");
 		}
 	    }
 	};
-	
+
+	Function cons = new Function() {
+	    @Override
+	    public SExpression apply(SExpression evargs, Environment env) {
+		if (!(evargs instanceof ConsCell) || ListOps.length(evargs) != 2) {
+		    throw new EvaluationError("CONS needs two arguments.");
+		}
+		SExpression second = ListOps.nth(evargs, 1);
+		if( second instanceof ConsCell || second.equals(Symbol.NIL)){
+		    return new ConsCell( ListOps.car(evargs), second.eval(env));
+		}else{
+		    throw new EvaluationError("CONS second argument should be list.");
+		}
+	    }
+	};
+
+	Function car;
+	Function cdr;
+	Function list;
+	Function eq;
+	Function eval;
+	Function apply;
+
 	Special define = new Special() {
 	    @Override
 	    public SExpression applySpecial(SExpression args, Environment env) {
-		if( !(args instanceof ConsCell) || ListOps.length((ConsCell)args) != 2){
+		if (!(args instanceof ConsCell) || ListOps.length((ConsCell) args) != 2) {
 		    throw new EvaluationError("DEFINE should have two arguments");
 		}
 		ConsCell c = (ConsCell) args;
 		Symbol alias;
-		
-		try{
+
+		try {
 		    alias = (Symbol) c.car;
-		}catch(ClassCastException e){
+		} catch (ClassCastException e) {
 		    throw new EvaluationError("DEFINE's first argument should be a symbol");
 		}
-		
-	        SExpression val = c.cdr.eval(env);
-		
+
+		SExpression val = c.cdr.eval(env);
+
 		env.bindGlobal(alias, val);
-		
+
 		return Symbol.NIL;
 	    }
 	};
 
-	
-	
-	env.bindGlobal(new Symbol("add"), add);
-	env.bindGlobal(new Symbol("mult"), mult);
-	env.bindGlobal(new Symbol("define"), define);
+	Special quote;
+	Special ifsp;
+	Special lambda;
+
+	bindGlobal(env, "add", add);
+	bindGlobal(env, "mult", mult);
+	bindGlobal(env, "define", define);
+//	bindGlobal(env, "quote", quote);
+	bindGlobal(env, "cons", cons);
+//	bindGlobal(env, "car", car);
+//	bindGlobal(env, "cdr", cdr);
+//	bindGlobal(env, "list", list);
+//	bindGlobal(env, "eq", eq);
+//	bindGlobal(env, "if", ifsp);
+//	bindGlobal(env, "lambda", lambda);
+//	bindGlobal(env, "eval", eval);
+//	bindGlobal(env, "apply", apply);
+
+    }
+
+    private static void bindGlobal(Environment env, String name, SExpression exp) {
+	env.bindGlobal(new Symbol(name), exp);
     }
 }
