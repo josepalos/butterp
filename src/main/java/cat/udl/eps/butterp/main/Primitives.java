@@ -67,7 +67,21 @@ public class Primitives {
 	    }
 	};
 
-	Function car;
+	Function car = new Function() {
+	    @Override
+	    public SExpression apply(SExpression evargs, Environment env) {
+		if( ListOps.length(evargs) == 1){
+		    SExpression list = ListOps.car(evargs).eval(env);
+		    if(! (list instanceof ConsCell) ){
+			throw new EvaluationError("CAR needs a list argument");
+		    }
+		    return ListOps.car(list);
+		}else{
+		    throw new EvaluationError("CAR needs an argument.");
+		}
+	    }
+	};
+	
 	Function cdr;
 	Function list;
 	Function eq;
@@ -114,7 +128,7 @@ public class Primitives {
 	bindGlobal(env, "define", define);
 	bindGlobal(env, "quote", quote);
 	bindGlobal(env, "cons", cons);
-//	bindGlobal(env, "car", car);
+	bindGlobal(env, "car", car);
 //	bindGlobal(env, "cdr", cdr);
 //	bindGlobal(env, "list", list);
 //	bindGlobal(env, "eq", eq);
