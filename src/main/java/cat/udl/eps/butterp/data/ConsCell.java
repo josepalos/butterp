@@ -22,7 +22,7 @@ public class ConsCell implements SExpression {
 	    Special s = (Special) first;
 	    return s.applySpecial(cdr, env);
 	}else{
-	    return first.eval(env);
+	    throw new EvaluationError("Cannot apply "+first);
 	}
     }
 
