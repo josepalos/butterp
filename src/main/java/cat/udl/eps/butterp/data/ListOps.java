@@ -38,12 +38,11 @@ public class ListOps {
 
     public static int length(SExpression sexpr) {
         if (sexpr.equals(Symbol.NIL)) return 0;
-        ConsCell c = (ConsCell) sexpr;
-        return 1 + length(c.cdr);
+        return 1 + length( cdr(sexpr) );
     }
 
     public static SExpression nth(SExpression sexpr, int n) {
-	if(cdr(sexpr) == Symbol.NIL)
+	if( cdr(sexpr ) == Symbol.NIL)
 	    throw new IndexOutOfBoundsException();
 	else if(n == 0)
 	    return car(sexpr);
