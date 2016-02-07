@@ -9,6 +9,8 @@ import cat.udl.eps.butterp.data.Integer;
 import cat.udl.eps.butterp.data.ListOps;
 import cat.udl.eps.butterp.data.Special;
 import cat.udl.eps.butterp.environment.Environment;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Primitives {
 
@@ -97,7 +99,18 @@ public class Primitives {
 	    }
 	};
 	
-	Function list;
+	Function list = new Function() {
+	    @Override
+	    public SExpression apply(SExpression evargs, Environment env) {
+		SExpression current = evargs;
+		List<SExpression> list = new LinkedList<>();
+		while(!current.equals(Symbol.NIL)){
+		    list.add(ListOps.car(current).eval(env));
+		    current = ListOps.cdr(current);
+		}
+		return ListOps.list(list);
+	    }
+	};
 	Function eq;
 	Function eval;
 	Function apply;
@@ -144,7 +157,7 @@ public class Primitives {
 	bindGlobal(env, "cons", cons);
 	bindGlobal(env, "car", car);
 	bindGlobal(env, "cdr", cdr);
-//	bindGlobal(env, "list", list);
+	bindGlobal(env, "list", list);
 //	bindGlobal(env, "eq", eq);
 //	bindGlobal(env, "if", ifsp);
 //	bindGlobal(env, "lambda", lambda);
