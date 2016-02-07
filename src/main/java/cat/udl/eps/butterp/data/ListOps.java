@@ -42,7 +42,7 @@ public class ListOps {
     }
 
     public static SExpression nth(SExpression sexpr, int n) {
-	if( cdr(sexpr ) == Symbol.NIL)
+	if( sexpr == Symbol.NIL)
 	    throw new IndexOutOfBoundsException();
 	else if(n == 0)
 	    return car(sexpr);
