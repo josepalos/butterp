@@ -97,14 +97,22 @@ public class Primitives {
 	    }
 	};
 
-	Special quote;
+	Special quote = new Special() {
+	    @Override
+	    public SExpression applySpecial(SExpression args, Environment env) {
+		if( ListOps.length(args) == 1 )
+		    return ListOps.car(args);
+		else
+		    throw new EvaluationError("QUOTE needs an argument.");
+	    }
+	};
 	Special ifsp;
 	Special lambda;
 
 	bindGlobal(env, "add", add);
 	bindGlobal(env, "mult", mult);
 	bindGlobal(env, "define", define);
-//	bindGlobal(env, "quote", quote);
+	bindGlobal(env, "quote", quote);
 	bindGlobal(env, "cons", cons);
 //	bindGlobal(env, "car", car);
 //	bindGlobal(env, "cdr", cdr);
