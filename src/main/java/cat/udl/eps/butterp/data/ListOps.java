@@ -38,26 +38,22 @@ public class ListOps {
 
     public static int length(SExpression sexpr) {
         if (sexpr.equals(Symbol.NIL)) return 0;
-        ConsCell c = (ConsCell) sexpr;
-        return 1 + length(c.cdr);
+        return 1 + length( cdr(sexpr) );
     }
 
     public static SExpression nth(SExpression sexpr, int n) {
-        throw new UnsupportedOperationException("not implemented yet");
+	if( cdr(sexpr ) == Symbol.NIL)
+	    throw new IndexOutOfBoundsException();
+	else if(n == 0)
+	    return car(sexpr);
+	else
+	    return nth( cdr(sexpr), n-1 );
     }
 
     public static boolean isListOf(SExpression params, Class<?> klass) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return params.equals(Symbol.NIL) ||
+		( klass.isInstance(car(params)) &&
+		isListOf(cdr(params), klass));
     }
 
 }
-
-
-
-
-
-/*
-[consCell ( 1r elem, ConsCell (2n elem, ConsCell (3r element)))]
-
-
-*/
