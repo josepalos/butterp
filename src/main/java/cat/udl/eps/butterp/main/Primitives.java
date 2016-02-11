@@ -31,8 +31,8 @@ public class Primitives {
 
 		    ConsCell argsCC = (ConsCell) evargs;
 		    Integer i = (Integer) argsCC.car.eval(env);
-		    Integer rec = (Integer) this.apply(argsCC.cdr, env);
-		    return new Integer(i.value + rec.value);
+		    Integer recursive_add = (Integer) this.apply(argsCC.cdr, env);
+		    return new Integer(i.value + recursive_add.value);
 		} catch (ClassCastException e) {
 		    throw new EvaluationError("ADD should get only integer arguments");
 		}
@@ -49,8 +49,8 @@ public class Primitives {
 
 		    ConsCell argsCC = (ConsCell) evargs;
 		    Integer i = (Integer) argsCC.car.eval(env);
-		    Integer rec = (Integer) this.apply(argsCC.cdr, env);
-		    return new Integer(i.value * rec.value);
+		    Integer recursive_mult = (Integer) this.apply(argsCC.cdr, env);
+		    return new Integer(i.value * recursive_mult.value);
 		} catch (ClassCastException e) {
 		    throw new EvaluationError("MULT should get only integer arguments");
 		}
@@ -60,7 +60,7 @@ public class Primitives {
 	Function cons = new Function() {
 	    @Override
 	    public SExpression apply(SExpression evargs, Environment env) {
-		if ( ListOps.length(evargs) != 2) {
+		if (ListOps.length(evargs) != 2) {
 		    throw new EvaluationError("CONS needs two arguments.");
 		}
 		SExpression second = ListOps.nth(evargs, 1).eval(env);
@@ -192,12 +192,14 @@ public class Primitives {
 		}
 	    }
 	};
+	
 	Special ifsp = new Special() {
 	    @Override
 	    public SExpression applySpecial(SExpression args, Environment env) {
 		if (ListOps.length(args) == 3) {
 		    ConsCell arg = (ConsCell) args;
 		    SExpression s = arg.car.eval(env);
+		    
 		    if (s.equals(Symbol.NIL)) {
 			return ListOps.nth(args, 2).eval(env);
 		    } else {
@@ -213,13 +215,13 @@ public class Primitives {
 	    @Override
 	    public SExpression applySpecial(SExpression args, Environment env) {
 		if (ListOps.length(args) == 2) {
-		    if(! ListOps.isListOf( ListOps.car(args), Symbol.class)){
+		    if (!ListOps.isListOf(ListOps.car(args), Symbol.class)) {
 			throw new EvaluationError("LAMBDA first argument must be a symbols list");
 		    }
-		    
+
 		    final SExpression symbols = ListOps.car(args);
 		    final SExpression body = ListOps.nth(args, 1);
-		    
+
 		    return new Lambda(symbols, body, env);
 
 		} else {
@@ -246,29 +248,5 @@ public class Primitives {
 
     private static void bindGlobal(Environment env, String name, SExpression exp) {
 	env.bindGlobal(new Symbol(name), exp);
-    }
-    
-    public static void main(String[] args) {
-	Environment env = new NestedMap();
-	loadPrimitives(env);
-	SExpression s1 = Parser.parse("(define y" +
-                "       (lambda (x)" +
-                "         ((lambda (proc)" +
-                "            (x (lambda (arg) ((proc proc) arg))))" +
-                "          (lambda (proc)" +
-                "            (x (lambda (arg) ((proc proc) arg)))))))");
-	SExpression s2 = Parser.parse("(define f" +
-                "       (lambda (func)" +
-                "         (lambda (n)" +
-                "           (if (eq n 0)" +
-                "              1" +
-                "              (mult n (func (add n -1)))))))");//(lambda (func) (lambda (n) (if (eq n 0) 1 2))))");
-	SExpression s3 = Parser.parse("(define factorial (y f))");
-	SExpression s4 = Parser.parse("(factorial 6)");
-	
-	System.out.println(s1.eval(env));
-	System.out.println(s2.eval(env));
-	System.out.println(s3.eval(env));
-	System.out.println(s4.eval(env));
     }
 }

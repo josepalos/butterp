@@ -1,22 +1,24 @@
 package cat.udl.eps.butterp.environment;
 
 import cat.udl.eps.butterp.data.EvaluationError;
+import cat.udl.eps.butterp.data.ListOps;
 import cat.udl.eps.butterp.data.SExpression;
 import cat.udl.eps.butterp.data.Symbol;
 import java.util.HashMap;
 import java.util.Map;
 
 public class NestedMap implements Environment {
-    private final Map<Symbol, SExpression> map;
+
+    private final Map<Symbol, SExpression> symbols_map;
     private final Environment parent;
-    
+
     public NestedMap() {
-        map = new HashMap<>();
+	symbols_map = new HashMap<>();
 	parent = null;
     }
-    
-    private NestedMap(Environment parent){
-	map = new HashMap<>();
+
+    private NestedMap(Environment parent) {
+	symbols_map = new HashMap<>();
 	this.parent = parent;
     }
 
@@ -30,10 +32,10 @@ public class NestedMap implements Environment {
 	bind globally this symbol.
 	If it's the root, trying to bind globally to the parent will not be
 	logic (it hasn't parent).
-	*/
-        if(parent != null){
+	 */
+	if (parent != null) {
 	    parent.bindGlobal(symbol, value);
-	}else{
+	} else {
 	    this.bind(symbol, value);
 	}
     }
@@ -46,25 +48,35 @@ public class NestedMap implements Environment {
 	If this recursively call reaches root, but the symbol is not found
 	there either, the system couldn't identify the symbol, so an
 	EvaluationError is thrown.
-	*/
-        if(map.containsKey(symbol)){
-	    return map.get(symbol);
-	}else if(parent != null){
+	 */
+	if (symbols_map.containsKey(symbol)) {
+	    return symbols_map.get(symbol);
+	} else if (parent != null) {
 	    return parent.find(symbol);
-	}else{
-	    throw new EvaluationError("Symbol "+symbol.name+" not found");
+	} else {
+	    throw new EvaluationError("Symbol " + symbol.name + " not found");
 	}
     }
 
     @Override
     public Environment extend() {
-	Environment env = new NestedMap(this);
-	return env;
+	return new NestedMap(this);
     }
 
     @Override
     public void bind(Symbol symbol, SExpression value) {
-        map.put(symbol, value);
+	symbols_map.put(symbol, value);
+    }
+
+    @Override
+    public void bindAll(SExpression symbols_list, SExpression values) {
+	if (!symbols_list.equals(Symbol.NIL)) {
+	    this.bind(
+		    (Symbol) ListOps.car(symbols_list),
+		    ListOps.car(values).eval(this)
+	    );
+	    this.bindAll(ListOps.cdr(symbols_list), ListOps.cdr(values));
+	}
     }
 
 }

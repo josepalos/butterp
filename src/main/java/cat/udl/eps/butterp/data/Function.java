@@ -6,13 +6,13 @@ public abstract class Function implements SExpression {
 
     @Override
     public SExpression eval(Environment env) {
-        return this;
+	return this;
     }
 
     public abstract SExpression apply(SExpression evargs, Environment env);
 
     @Override
     public String toString() {
-        return String.format("<function-%x>", hashCode());
+	return String.format("<function-%x>", hashCode());
     }
 }
