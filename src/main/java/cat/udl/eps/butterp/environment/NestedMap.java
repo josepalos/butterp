@@ -68,15 +68,4 @@ public class NestedMap implements Environment {
 	symbols_map.put(symbol, value);
     }
 
-    @Override
-    public void bindAll(SExpression symbols_list, SExpression values) {
-	if (!symbols_list.equals(Symbol.NIL)) {
-	    this.bind(
-		    (Symbol) ListOps.car(symbols_list),
-		    ListOps.car(values).eval(this)
-	    );
-	    this.bindAll(ListOps.cdr(symbols_list), ListOps.cdr(values));
-	}
-    }
-
 }

@@ -11,8 +11,6 @@ public interface Environment {
     void bind(Symbol symbol, SExpression value);
 
     void bindGlobal(Symbol symbol, SExpression value);
-    
-    void bindAll(SExpression symbols_list, SExpression values);
 
     SExpression find(Symbol symbol);
 

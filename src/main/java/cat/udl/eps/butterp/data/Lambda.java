@@ -16,7 +16,17 @@ public class Lambda extends Function {
 
     @Override
     public SExpression apply(SExpression evargs, Environment callingEnv) {
-	local_environment.bindAll(params, evargs);
+	bindAll(local_environment, params, evargs);
 	return body.eval(local_environment);
+    }
+    
+    private void bindAll(Environment e, SExpression symbols_list, SExpression values) {
+	if (!symbols_list.equals(Symbol.NIL)) {
+	    e.bind(
+		    (Symbol) ListOps.car(symbols_list),
+		    ListOps.car(values).eval(e)
+	    );
+	    bindAll(e, ListOps.cdr(symbols_list), ListOps.cdr(values));
+	}
     }
 }
