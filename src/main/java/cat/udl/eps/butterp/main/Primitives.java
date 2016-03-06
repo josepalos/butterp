@@ -30,7 +30,7 @@ public class Primitives {
 		    }
 
 		    ConsCell argsCC = (ConsCell) evargs;
-		    Integer i = (Integer) argsCC.car.eval(env);
+		    Integer i = (Integer) argsCC.car;
 		    Integer recursive_add = (Integer) this.apply(argsCC.cdr, env);
 		    return new Integer(i.value + recursive_add.value);
 		} catch (ClassCastException e) {
@@ -48,7 +48,7 @@ public class Primitives {
 		    }
 
 		    ConsCell argsCC = (ConsCell) evargs;
-		    Integer i = (Integer) argsCC.car.eval(env);
+		    Integer i = (Integer) argsCC.car;
 		    Integer recursive_mult = (Integer) this.apply(argsCC.cdr, env);
 		    return new Integer(i.value * recursive_mult.value);
 		} catch (ClassCastException e) {
@@ -63,9 +63,9 @@ public class Primitives {
 		if (ListOps.length(evargs) != 2) {
 		    throw new EvaluationError("CONS needs two arguments.");
 		}
-		SExpression second = ListOps.nth(evargs, 1).eval(env);
+		SExpression second = ListOps.nth(evargs, 1);
 		if (second instanceof ConsCell || second.equals(Symbol.NIL)) {
-		    return new ConsCell(ListOps.car(evargs).eval(env), second);
+		    return new ConsCell(ListOps.car(evargs), second);
 		} else {
 		    throw new EvaluationError("CONS second argument should be list.");
 		}
@@ -76,7 +76,7 @@ public class Primitives {
 	    @Override
 	    public SExpression apply(SExpression evargs, Environment env) {
 		if (ListOps.length(evargs) == 1) {
-		    SExpression list = ListOps.car(evargs).eval(env);
+		    SExpression list = ListOps.car(evargs);
 		    if (!(list instanceof ConsCell)) {
 			throw new EvaluationError("CAR needs a list argument");
 		    }
@@ -91,7 +91,7 @@ public class Primitives {
 	    @Override
 	    public SExpression apply(SExpression evargs, Environment env) {
 		if (ListOps.length(evargs) == 1) {
-		    SExpression list = ListOps.car(evargs).eval(env);
+		    SExpression list = ListOps.car(evargs);
 		    if (!(list instanceof ConsCell)) {
 			throw new EvaluationError("CAR needs a list argument");
 		    }
@@ -108,7 +108,7 @@ public class Primitives {
 		SExpression current = evargs;
 		List<SExpression> list = new LinkedList<>();
 		while (!current.equals(Symbol.NIL)) {
-		    list.add(ListOps.car(current).eval(env));
+		    list.add(ListOps.car(current));
 		    current = ListOps.cdr(current);
 		}
 		return ListOps.list(list);
@@ -119,8 +119,8 @@ public class Primitives {
 	    @Override
 	    public SExpression apply(SExpression evargs, Environment env) {
 		if (ListOps.length(evargs) == 2) {
-		    SExpression first = ListOps.nth(evargs, 0).eval(env);
-		    SExpression second = ListOps.nth(evargs, 1).eval(env);
+		    SExpression first = ListOps.nth(evargs, 0);
+		    SExpression second = ListOps.nth(evargs, 1);
 		    return (first.equals(second) ? Symbol.TRUE : Symbol.NIL);
 		} else {
 		    throw new EvaluationError("EQ needs two arguments");
@@ -132,9 +132,7 @@ public class Primitives {
 	    @Override
 	    public SExpression apply(SExpression evargs, Environment env) {
 		if (ListOps.length(evargs) == 1) {
-		    /* Eval two times because first we get the expression to
-		    evaluate. */
-		    return ListOps.car(evargs).eval(env).eval(env);
+		    return ListOps.car(evargs).eval(env);
 		} else {
 		    throw new EvaluationError("EVAL should get only one argument");
 		}
@@ -145,14 +143,14 @@ public class Primitives {
 	    @Override
 	    public SExpression apply(SExpression evargs, Environment env) {
 		if (ListOps.length(evargs) == 2) {
-		    SExpression first = ListOps.car(evargs).eval(env);
-		    if (!(first instanceof Function)) {
+		    SExpression function = ListOps.car(evargs);
+		    if (!(function instanceof Function)) {
 			throw new EvaluationError("First arg of APPLY should be a function");
 		    }
+                    
+                    SExpression args = ListOps.nth(evargs, 1);
 
-		    SExpression args = ListOps.car(ListOps.cdr(evargs)).eval(env);
-
-		    return ListOps.cons(first, args).eval(env);
+                    return ((Function) function).apply(args, env);
 		} else {
 		    throw new EvaluationError("APPLY should get two arguments");
 		}
