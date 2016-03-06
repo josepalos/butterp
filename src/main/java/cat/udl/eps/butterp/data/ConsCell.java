@@ -20,8 +20,8 @@ public class ConsCell implements SExpression {
 
 	if (first instanceof Function) {
 	    Function f = (Function) first;
-            ConsCell args = evalAll(cdr, env);
-	    return f.apply(cdr, env);
+            SExpression args = evalAll(cdr, env);
+	    return f.apply(args, env);
 	} else if (first instanceof Special) {
 	    Special s = (Special) first;
 	    return s.applySpecial(cdr, env);
@@ -61,7 +61,7 @@ public class ConsCell implements SExpression {
 	}
     }
 
-    private ConsCell evalAll(SExpression args, Environment env) {
+    private SExpression evalAll(SExpression args, Environment env) {
         SExpression current = args;
         List<SExpression> evaluatedArgs = new LinkedList<>();
         while( !current.equals(Symbol.NIL) ){
@@ -69,6 +69,6 @@ public class ConsCell implements SExpression {
             current = ListOps.cdr(current);
         }
         
-        return (ConsCell) ListOps.list(evaluatedArgs);
+        return ListOps.list(evaluatedArgs);
     }
 }
