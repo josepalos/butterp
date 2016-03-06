@@ -1,6 +1,8 @@
 package cat.udl.eps.butterp.data;
 
 import cat.udl.eps.butterp.environment.Environment;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ConsCell implements SExpression {
 
@@ -18,6 +20,7 @@ public class ConsCell implements SExpression {
 
 	if (first instanceof Function) {
 	    Function f = (Function) first;
+            ConsCell args = evalAll(cdr, env);
 	    return f.apply(cdr, env);
 	} else if (first instanceof Special) {
 	    Special s = (Special) first;
@@ -56,5 +59,16 @@ public class ConsCell implements SExpression {
 	    strb.append(", ");
 	    ((ConsCell) cdr).elementsToString(strb);
 	}
+    }
+
+    private ConsCell evalAll(SExpression args, Environment env) {
+        SExpression current = args;
+        List<SExpression> evaluatedArgs = new LinkedList<>();
+        while( !current.equals(Symbol.NIL) ){
+            evaluatedArgs.add( ListOps.car(current).eval(env) );
+            current = ListOps.cdr(current);
+        }
+        
+        return (ConsCell) ListOps.list(evaluatedArgs);
     }
 }
